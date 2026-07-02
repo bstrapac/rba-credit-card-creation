@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 import rba.card_creation.model.Client;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,5 +18,9 @@ public class CreditCardRepository {
 
     public Optional<Client> findByOIB(String oib) {
         return Optional.empty();
+    }
+
+    public List<Client> findAll() {
+        return List.of();
     }
 }

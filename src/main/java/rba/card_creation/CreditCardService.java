@@ -7,6 +7,8 @@ import rba.card_creation.model.NewCardRequest;
 import rba.card_creation.utils.CardRequestClient;
 import rba.card_creation.utils.CardStatus;
 
+import java.util.List;
+
 @Service
 public class CreditCardService {
 
@@ -44,5 +46,9 @@ public class CreditCardService {
     public Client findClientByOIB(String oib) {
         return creditCardRepository.findByOIB(oib).orElse(null);
 
+    }
+
+    public List<Client> getAllClients() {
+        return creditCardRepository.findAll();
     }
 }

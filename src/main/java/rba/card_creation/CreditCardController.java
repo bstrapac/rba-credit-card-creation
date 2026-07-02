@@ -8,6 +8,8 @@ import rba.card_creation.model.Client;
 import rba.card_creation.model.CreateCardResponse;
 import rba.card_creation.model.NewCardRequest;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/card-request")
 public class CreditCardController {
@@ -31,5 +33,10 @@ public class CreditCardController {
     @DeleteMapping()
     public void deleteCardRequest(String OIB) {
         creditCardService.deleteCardRequest(OIB);
+    }
+
+    @GetMapping("/all")
+    public List<Client> getAllClients() {
+        return creditCardService.getAllClients();
     }
 }
