@@ -32,7 +32,7 @@ public class CardRequestClient {
                 .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
                 .build();
         HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        
+
         if (response.statusCode() < 200 || response.statusCode() >= 300) {
             throw new CardApiException(response.statusCode(), response.body(),
                     "API request failed with status " + response.statusCode());
@@ -43,7 +43,7 @@ public class CardRequestClient {
         String status = CardStatus.PENDING.toString();
         String firstName = safe(request.getFirstName());
         String lastName = safe(request.getLastName());
-        String oib = safe(request.getOIB());
+        String oib = safe(request.getOib());
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         sb.append("\"firstName\":\"").append(firstName).append("\",");

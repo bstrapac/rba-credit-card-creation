@@ -1,26 +1,15 @@
 package rba.card_creation;
 
-import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import rba.card_creation.model.Client;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
-@EnableJpaRepositories
-public class CreditCardRepository {
-    @Transactional
-    public Client save(Client client) { return client; }
+public interface CreditCardRepository extends JpaRepository<Client, Long> {
 
-    public void deleteByOIB(String oib) {}
+    void deleteByOib(String oib);
 
-    public Optional<Client> findByOIB(String oib) {
-        return Optional.empty();
-    }
-
-    public List<Client> findAll() {
-        return List.of();
-    }
+    Optional<Client> findByOib(String oib);
 }

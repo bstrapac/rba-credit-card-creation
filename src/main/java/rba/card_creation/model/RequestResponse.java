@@ -6,9 +6,7 @@ import rba.card_creation.utils.CardStatus;
 
 @Data
 @NoArgsConstructor
-public class CreateCardResponse {
-    String OIB;
+public class RequestResponse {
+    String oib;
     CardStatus cardStatus;
-
-    public CreateCardResponse(String oib, CardStatus cardStatus) {}
 }
