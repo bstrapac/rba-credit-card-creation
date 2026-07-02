@@ -23,7 +23,7 @@ public class CreditCardController {
         return creditCardService.createNewCard(request);
     }
 
-    @GetMapping()
+    @GetMapping("/find")
     public Client findClientByOIB(String OIB) {
         return creditCardService.findClientByOIB(OIB);
     }
