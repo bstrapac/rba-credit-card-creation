@@ -31,7 +31,6 @@ public class CreditCardService {
         return new CreateCardResponse(client.getOIB(), CardStatus.PENDING);
     }
 
-
     public void deleteCardRequest(String oib) {
         creditCardRepository.findByOIB(oib).ifPresent(client -> {
             if (client.getCardStatus() == CardStatus.PENDING) {

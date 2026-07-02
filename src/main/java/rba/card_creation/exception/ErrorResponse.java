@@ -1,4 +1,4 @@
-package rba.card_creation.model;
+package rba.card_creation.exception;
 
 import lombok.Data;
 
