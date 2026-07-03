@@ -3,7 +3,9 @@ package rba.card_creation.client;
 import org.springframework.stereotype.Component;
 import rba.card_creation.exception.CardApiException;
 import rba.card_creation.model.CardStatus;
+import rba.card_creation.model.Client;
 import rba.card_creation.model.NewCardRequest;
+import tools.jackson.databind.ObjectMapper;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -16,6 +18,8 @@ import java.time.Duration;
 public class CardRequestClient {
 
     private final HttpClient httpClient;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public CardRequestClient() {
         this.httpClient = HttpClient.newBuilder()
@@ -41,18 +45,16 @@ public class CardRequestClient {
     }
 
     private String buildJson(NewCardRequest request) {
-        String status = CardStatus.PENDING.toString();
-        String firstName = safe(request.getFirstName());
-        String lastName = safe(request.getLastName());
-        String oib = safe(request.getOib());
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"firstName\":\"").append(firstName).append("\",");
-        sb.append("\"lastName\":\"").append(lastName).append("\",");
-        sb.append("\"status\":").append(status==null?"null":"\""+safe(status)+"\"").append(",");
-        sb.append("\"oib\":\"").append(oib).append("\"");
-        sb.append("}");
-        return sb.toString();
+        try {
+            Client client = new Client();
+            client.setFirstName(safe(request.getFirstName()));
+            client.setLastName(safe(request.getLastName()));
+            client.setCardStatus(CardStatus.PENDING);
+            client.setOib(safe(request.getOib()));
+            return objectMapper.writeValueAsString(client);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to build card JSON", e);
+        }
     }
 
     private String safe(String s) {

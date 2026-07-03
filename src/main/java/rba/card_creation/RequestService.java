@@ -1,5 +1,6 @@
 package rba.card_creation;
 
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import rba.card_creation.model.Client;
 import rba.card_creation.model.RequestResponse;
