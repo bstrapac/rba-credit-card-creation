@@ -18,7 +18,6 @@ import java.time.Duration;
 public class CardRequestClient {
 
     private final HttpClient httpClient;
-
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public CardRequestClient() {

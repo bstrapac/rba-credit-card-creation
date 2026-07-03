@@ -1,12 +1,11 @@
 package rba.card_creation;
 
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
-import rba.card_creation.model.Client;
-import rba.card_creation.model.RequestResponse;
-import rba.card_creation.model.NewCardRequest;
 import rba.card_creation.client.CardRequestClient;
 import rba.card_creation.model.CardStatus;
+import rba.card_creation.model.Client;
+import rba.card_creation.model.NewCardRequest;
+import rba.card_creation.model.RequestResponse;
 import rba.card_creation.utils.Validation;
 
 import java.util.List;
@@ -16,7 +15,6 @@ public class RequestService {
 
     private final CreditCardRepository creditCardRepository;
     private final CardRequestClient cardRequestClient;
-
     private final Validation validation;
 
     public RequestService(CreditCardRepository creditCardRepository, CardRequestClient cardRequestClient, Validation validation) {
