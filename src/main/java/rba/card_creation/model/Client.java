@@ -8,11 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Client {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "first_name")
     String firstName;
+    @Column(name = "last_name")
     String lastName;
-    @Column(unique = true, nullable = false)
+    @Column(name = "oib", unique = true, nullable = false)
     String oib;
     @Enumerated(EnumType.STRING)
+    @Column(name = "card_status")
     CardStatus cardStatus;
 }

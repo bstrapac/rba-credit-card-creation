@@ -1,1 +1,15 @@
-services: {}
+services:
+  card-creation:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:h2:file:/app/data/card_creation_db;DB_CLOSE_ON_EXIT=FALSE
+      SPRING_H2_CONSOLE_SETTINGS_WEB_ALLOW_OTHERS: "true"
+    volumes:
+      - card-creation-data:/app/data
+
+volumes:
+  card-creation-data:
