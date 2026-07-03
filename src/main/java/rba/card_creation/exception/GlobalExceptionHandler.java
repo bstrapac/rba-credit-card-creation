@@ -1,11 +1,9 @@
-package rba.card_creation;
+package rba.card_creation.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import rba.card_creation.exception.CardApiException;
-import rba.card_creation.exception.ErrorResponse;
 
 import java.util.UUID;
 

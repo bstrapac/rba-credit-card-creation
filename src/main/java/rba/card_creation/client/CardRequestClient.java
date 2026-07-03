@@ -1,7 +1,8 @@
-package rba.card_creation.utils;
+package rba.card_creation.client;
 
 import org.springframework.stereotype.Component;
 import rba.card_creation.exception.CardApiException;
+import rba.card_creation.model.CardStatus;
 import rba.card_creation.model.NewCardRequest;
 
 import java.net.URI;

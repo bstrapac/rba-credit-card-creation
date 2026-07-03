@@ -1,4 +1,4 @@
-package rba.card_creation.utils;
+package rba.card_creation.model;
 
 public enum CardStatus {
     PENDING,
