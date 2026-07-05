@@ -1,5 +1,6 @@
 package rba.card_creation;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import rba.card_creation.client.CardRequestClient;
 import rba.card_creation.model.CardStatus;
@@ -11,6 +12,7 @@ import rba.card_creation.utils.Validation;
 import java.util.List;
 
 @Service
+@Slf4j
 public class RequestService {
 
     private final CreditCardRepository creditCardRepository;
@@ -35,6 +37,7 @@ public class RequestService {
 
         cardRequestClient.sendNewCardRequest(request);
 
+        log.info("New card request created for client: {}", request.getOib());
         return new RequestResponse();
     }
 
@@ -43,6 +46,7 @@ public class RequestService {
         creditCardRepository.findByOib(oib).ifPresent(client -> {
             if (client.getCardStatus() == CardStatus.PENDING) {
                 creditCardRepository.deleteByOib(oib);
+                log.info("Card request deleted for client: {}", oib);
             } else {
                 throw new IllegalStateException("Cannot delete card request with status: " + client.getCardStatus());
             }
