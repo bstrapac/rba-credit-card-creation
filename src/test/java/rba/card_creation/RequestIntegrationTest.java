@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @Disabled
-class RequestControllerTest {
+class RequestIntegrationTest {
 
     @Mock
     private MockMvc mockMvc;
@@ -40,28 +40,29 @@ class RequestControllerTest {
 
     @Test
     void createsCardRequestAndMocksExternalCardApi() throws Exception {
+        /*
+        * Http client is using an imaginary endpoint:
+        * https://stackoverflow.com/questions/20542361/mocking-apache-httpclient-using-mockito
+        * https://stackoverflow.com/questions/43900186/how-to-mock-a-http-response
+        * https://stackoverflow.com/questions/20542361/mocking-apache-httpclient-using-mockito
+        * https://www.mock-server.com/
+        * */
         mockMvc.perform(get("/api/v1/card-request")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "firstName": "Ana",
-                                  "lastName": "Horvat",
-                                  "oib": "12345678901"
-                                }
-                                """))
-                .andExpect(status().isOk());
+                        .content(content))
+                .andExpect(status().isOk()); /* Status is null -> api.something is imaginary */
 
-        assertThat(creditCardRepository.findByOib("12345678901"))
+        assertThat(creditCardRepository.findByOib(oib))
                 .hasValueSatisfying(client -> {
-                    assertThat(client.getFirstName()).isEqualTo("Ana");
-                    assertThat(client.getLastName()).isEqualTo("Horvat");
+                    assertThat(client.getFirstName()).isEqualTo(firstName);
+                    assertThat(client.getLastName()).isEqualTo(lastName);
                     assertThat(client.getCardStatus()).isEqualTo(CardStatus.PENDING);
                 });
 
         verify(cardRequestClient).sendNewCardRequest(argThat(request ->
-                "Ana".equals(request.getFirstName())
-                        && "Horvat".equals(request.getLastName())
-                        && "12345678901".equals(request.getOib())
+                firstName.equals(request.getFirstName())
+                        && lastName.equals(request.getLastName())
+                        && oib.equals(request.getOib())
         ));
     }
 
@@ -74,4 +75,14 @@ class RequestControllerTest {
             return mock(CardRequestClient.class);
         }
     }
+
+    String content = """
+                        {
+                          "firstName": "Ana",
+                          "lastName": "Horvat",
+                          "oib": "12345678901"
+                    }""";
+    String firstName = "Ana";
+    String lastName = "Horvat";
+    String oib = "12345678901";
 }

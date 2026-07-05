@@ -46,18 +46,13 @@ public class CardRequestClient {
     private String buildJson(NewCardRequest request) {
         try {
             Client client = new Client();
-            client.setFirstName(safe(request.getFirstName()));
-            client.setLastName(safe(request.getLastName()));
+            client.setFirstName(request.getFirstName());
+            client.setLastName(request.getLastName());
             client.setCardStatus(CardStatus.PENDING);
-            client.setOib(safe(request.getOib()));
+            client.setOib(request.getOib());
             return objectMapper.writeValueAsString(client);
         } catch (Exception e) {
             throw new RuntimeException("Failed to build card JSON", e);
         }
-    }
-
-    private String safe(String s) {
-        if (s == null) return "";
-        return s.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 }
