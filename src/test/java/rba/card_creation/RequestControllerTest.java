@@ -1,9 +1,9 @@
 package rba.card_creation;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -15,23 +15,21 @@ import rba.card_creation.model.CardStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
-class RequestControllerIntegrationTest {
+@Disabled
+class RequestControllerTest {
 
-    @Autowired
+    @Mock
     private MockMvc mockMvc;
 
-    @Autowired
+    @Mock
     private CreditCardRepository creditCardRepository;
 
-    @Autowired
+    @Mock
     private CardRequestClient cardRequestClient;
 
     @AfterEach

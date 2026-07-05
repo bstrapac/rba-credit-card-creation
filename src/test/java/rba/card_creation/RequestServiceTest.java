@@ -1,9 +1,9 @@
 package rba.card_creation;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import rba.card_creation.client.CardRequestClient;
@@ -17,11 +17,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RequestServiceTest {
@@ -32,23 +28,23 @@ class RequestServiceTest {
     @Mock
     private CardRequestClient cardRequestClient;
 
-    @Mock
-    private Validation validation;
-
-    @InjectMocks
     private RequestService requestService;
+
+    @BeforeEach
+    void beforeAll() {
+        Validation validation = new Validation();
+        requestService = new RequestService(creditCardRepository, cardRequestClient, validation);
+    }
 
     @Test
     void createNewRequestSavesPendingClientAndCallsCardRequestClient() throws Exception {
-        NewCardRequest request = newRequest("Ana", "Horvat", "12345678901");
         ArgumentCaptor<Client> clientCaptor = ArgumentCaptor.forClass(Client.class);
 
-        RequestResponse response = requestService.createNewRequest(request);
+        RequestResponse response = requestService.createNewRequest(validRequest);
 
         assertThat(response).isNotNull();
-        verify(validation).validateRequest(request);
         verify(creditCardRepository).save(clientCaptor.capture());
-        verify(cardRequestClient).sendNewCardRequest(request);
+        verify(cardRequestClient).sendNewCardRequest(validRequest);
 
         Client savedClient = clientCaptor.getValue();
         assertThat(savedClient.getFirstName()).isEqualTo("Ana");
@@ -58,15 +54,19 @@ class RequestServiceTest {
     }
 
     @Test
-    void createNewRequestDoesNotPersistOrCallClientWhenValidationFails() {
-        NewCardRequest request = newRequest("Ana", "Horvat", "12345678901");
-        doThrow(new IllegalArgumentException("OIB must be 11 characters long"))
-                .when(validation)
-                .validateRequest(request);
-
-        assertThatThrownBy(() -> requestService.createNewRequest(request))
+    void createNewRequestDoesNotPersistOrCallClientWhenValidationFailsWIthOib() {
+        assertThatThrownBy(() -> requestService.createNewRequest(invalidRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("OIB must be 11 characters long");
+
+        verifyNoInteractions(creditCardRepository, cardRequestClient);
+    }
+
+    @Test
+    void createNewRequestDoesNotPersistOrCallClientWhenValidationFailsWithLastName() {
+        assertThatThrownBy(() -> requestService.createNewRequest(invalidRequestTwo))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("First name and/or last name cannot be null");
 
         verifyNoInteractions(creditCardRepository, cardRequestClient);
     }
@@ -79,7 +79,6 @@ class RequestServiceTest {
 
         requestService.deleteRequest(oib);
 
-        verify(validation).validateOib(oib);
         verify(creditCardRepository).findByOib(oib);
         verify(creditCardRepository).deleteByOib(oib);
     }
@@ -94,11 +93,15 @@ class RequestServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Cannot delete card request with status: APPROVED");
 
-        verify(validation).validateOib(oib);
         verify(creditCardRepository).findByOib(oib);
         verifyNoMoreInteractions(creditCardRepository);
     }
 
+    private final NewCardRequest validRequest = newRequest("Ana", "Horvat", "12345678901");
+
+    private final NewCardRequest invalidRequest = newRequest("Ana", "Horvat", "123456789012");
+
+    private final NewCardRequest invalidRequestTwo = newRequest(null, "Horvat", "12345678901");
     private static NewCardRequest newRequest(String firstName, String lastName, String oib) {
         NewCardRequest request = new NewCardRequest();
         request.setFirstName(firstName);
