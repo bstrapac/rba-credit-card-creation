@@ -22,7 +22,7 @@ public class RequestController {
         return requestService.getAllRequests();
     }
 
-    @GetMapping()
+    @PostMapping()
     public RequestResponse newRequest(@RequestBody NewCardRequest request) throws Exception {
         return requestService.createNewRequest(request);
     }
